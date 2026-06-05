@@ -1,0 +1,41 @@
+#style-form-init{
+	
+	width: 400px;
+	height: 400px;
+	background-color: #fff;
+	border: 1px solid #000;
+;
+	
+}
+
+.int-init{
+	
+	margin-top: 10px;
+	padding: 10px;
+	border-bottom: 1px solid black;
+	
+}
+
+
+
+.lbl-init{
+	
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+
+
+
+.input-button-init{
+	
+	margin-top: 10px;
+	background-color:#000000;
+	padding: 10px;
+	color: #fff;
+	font-weight: bold;
+	font-style: italic;
+}
+
+
+

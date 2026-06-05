@@ -1,0 +1,244 @@
+*{
+	
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	font-family: sans-serif,helvetica;
+}
+
+a{
+	
+	text-decoration: none;
+	
+}
+
+li{
+	
+	list-style: none;
+}
+
+
+*{
+	
+	user-select: none !important;
+}
+
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.img-log-sia{
+	    width: 100px;
+    height: 100px;
+    position: relative;
+    left: -10px;
+	position: relative;
+	top: 22px;
+}
+.form-salir{
+	
+	position: absolute;
+	top: 130px;
+	left: 15px;
+	background
+}
+
+
+.logo-string{
+	
+	position: absolute;
+    left: -60px;
+    top: -20px;
+}
+
+input[type="submit"]{
+	
+	cursor: pointer;
+}
+
+
+a{
+	
+	text-decoration: none;
+}
+input{
+	
+	border: 0px;
+	outline: none;
+}
+.overflow-hidden{
+	
+	
+	overflow: hidden;
+}
+.container-header-subheader{
+	
+	z-index: 9999;
+}
+label{
+	
+	text-transform: capitalize;
+	font-weight: bold;
+
+}
+
+table{
+	
+	border: 1px solid black;
+	
+}
+
+table,tr,td,th,tbody,thead{
+	
+	border-collapse: collapse;
+}
+
+
+.hidden{
+	
+	display: none;
+	visibility: hidden;
+	position: absolute; 
+	top: -2000px;
+}
+
+.block{
+	display: block;
+	visibility: visible;
+	position: static;
+}
+
+.inline-block{
+	display: block;
+	visibility: visible;
+	position: static;
+}
+
+.flex-center{
+	
+	display: flex;
+	justify-content: center;
+	width: 100% !Important;
+	height: 100vh !Important;
+	
+}
+
+.fnd-init{
+	background-image: url(../img/siagym-gym.jpg);
+	height: 800%;
+}
+.logo-container-sena-siagym{
+	
+	width: 95px;
+	height: 95px;
+	overflow: hidden;
+	position: relative;
+	left: 100px;
+	top: 25px;
+	
+}
+.logo-siagym{
+	
+	width: inherit;
+	height: inherit;
+}
+
+
+.siagym-logo-container{
+	
+	position: relative;
+	left: -100px;
+	top: 22px;
+	user-select: none;
+	cursor: pointer;
+}
+.logo-string{
+	
+	font-family: 'Anton', sans-serif;
+	font-style: italic;
+	font-size: 40px;
+	letter-spacing: 5px;
+}
+
+
+.select-false{
+	
+	user-select: none !Important;
+	
+}
+
+.flex{
+	display: flex;
+}
+
+.around{
+	
+	justify-content: space-around;
+}
+
+.between{
+	
+	justify-content: space-between;
+
+}
+.center-horizontal-flex{
+	
+	justify-content: center;
+}
+
+.width-date{
+	width: 65px;
+	float:right;
+	margin-left:3px;
+}
+
+.select-date-float{
+    display: -webkit-flex; /* Safari */
+    -webkit-flex-direction: row; /* Safari 6.1+ */
+    display: flex;
+    flex-direction: row;
+	float:right;
+}
+.center-horizontal-margin{
+	
+	margin: 0px auto;
+}
+.black{
+	color: #000000;
+	background-color: black;
+}
+
+
+.space-120{
+	
+	height: 120px;
+}
+
+
+.flex-center-complete{
+	
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	
+}
+/*donde esta el lgo del sena arriba*/
+.header{
+	
+	width: 100%;
+	height: 140px;
+	background-color: #f1f1f1  ;
+
+
+
+
+
+
+
+
+
