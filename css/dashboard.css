@@ -1,0 +1,315 @@
+.subheader{
+	
+	/*background-color: #8BC34A !Important;*/
+	/*background-image: url(../img/siagym-gym.jpg);
+	background-size: 40% 100%;*/
+	background-color: #000000;
+	width: 100%;
+	height:50px;
+	padding-left: 25px;
+	padding-right: 25px;
+
+}
+
+#report-table{
+	
+	width: 450px;
+	margin-top: 30px;
+
+}
+
+
+#report-table th{
+	
+	background-color: #000000;
+	color: #ffffff;	
+	border: 1px solid #ffffff;
+}
+
+#report-table tr td{
+	
+	text-align: center;
+}
+.items-menu{
+	
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-color: #CAFFCE;
+	border-top: 2px solid #CAFFCE;
+	height: 30px;
+	border-radius: 5px;
+	margin-left: 10px;
+	margin-top: 8px;
+}
+
+#year-sta{
+	
+	display: none;
+	position: relative;
+    top: -70px;
+}
+
+#form-ListarYear{
+	
+	position: relative;
+    top: -70px;
+	display: inline-block;
+}
+
+#ListarYear{
+	
+	left: 260px;
+    position: relative;
+}
+
+.now-id{
+	
+	margin-top: -25px;
+}
+#add-span{
+	
+	position: relative;
+    left: 35px;
+}
+
+
+
+.items-menu span{
+	
+	line-height: 1.8;
+	color: #000000;
+	user-select: none;
+}
+
+
+#statistics-sub{
+	
+	margin-top: 25px;
+
+}
+.noscript{
+	
+	box-shadow: 0px 0px 5px #000000;
+}
+
+.submit-logout{
+	
+	background-color: white !important;
+	width: 50px;
+	padding: 10px;
+	color: #000000 !important;
+	border-radius:  100%;
+	cursor: pointer;
+	font-weight: bold;
+	
+}
+
+#form-action{
+	
+	position: relative;
+	top: 40px;
+	box-shadow: 0px 0px 5px #000000;
+	padding: 20px;
+}
+
+.left{
+	
+	float: left;
+}
+.right{
+	
+	float: right;
+}
+input[type="text"],input[type="date"],select,input[type="number"],input[type="email"]{
+	
+	border: 1px solid #000000;
+	padding: 3px;
+}
+
+input,select{
+	width: 200px;
+}
+#form-action{
+	
+	margin: 0 auto;
+	width: 500px;
+}
+.divContent:first-letter{
+	
+	text-transform: uppercase;
+}
+.divContent{
+	
+	width: 200px;
+	min-height: 40px;
+	border-radius: 10px;
+	margin-top: 10px;
+	color: #ffffff;
+	text-align: center;
+	user-select: none;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.error{
+	background-color: red;
+}
+.success{
+	
+	background-color: green;
+}
+.block-from{
+	
+	margin-top: 20px;
+	
+}
+
+.block-from label{
+	
+	font-weight: normal;
+	
+}
+
+.container-header-subheader{
+position:fixed;
+top: 0px; 
+height: auto;
+width: 100%;
+
+}
+
+.container{
+	
+	margin-top: 195px;
+	/*background-color: #f1f1f1; */
+	height: 300px; 
+	width: 100%;
+}
+#container-siagym{
+	padding-bottom: 80px;
+}
+input[type="submit"]{
+	
+	/*background-color: #2196F3;*/
+	background-color: #000000;
+	color: #fff;
+	padding: 5px;
+}
+
+
+	
+#cont-title h1{
+	
+	color: #000;
+	margin-bottom: 30px;
+}
+
+#table-content{
+	
+	margin-top: 25px;
+}
+
+#table-content table,td,th{
+	
+	border: 1px solid black;
+	padding:5px;
+}
+
+#table-content table th{
+	
+	background-color: #000000;
+	color: #ffffff;
+	border: 1px solid #ffffff;
+}
+
+#table-content,table{
+	
+	width: 400px;
+}
+
+#table-content table tr td{
+	
+	text-align: center;
+	text-transform: capitalize;
+}
+
+.btn{
+	
+	width: 100px;
+	padding: 5px;
+    border: none;
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+	cursor: pointer;
+}
+#btn-delete{
+	/*background-color: #2196F3;*/
+	background-color: #000000;
+    color: #fff;
+    padding-left: 10px;
+	padding-right: 10px;
+	font-weight: bold;
+	cursor: pointer;
+}
+#change{
+	
+	display: inline-block;
+}
+.ads span{
+	
+	text-transform: capitalize;
+}
+#vista{
+	
+	width: 500px;
+    float: right;
+    margin-right: 100px;
+	background-color: #CFD0CF;
+	padding: 20px;
+    margin-top: 40px;
+    min-height: 300px;
+	margin-bottom: 40px;
+	
+}
+#block-hidden{   
+	
+	height: 25px;
+    background-color: rgba(0,0,0,.1);
+    width: 200px;
+    border: 1px solid black;
+}
+#input-block{
+
+	display: inline-block;
+
+}
+
+.disabled{
+	
+	opacity: .5;
+	color: gray !Important;
+}
+
+#subtitle{
+	
+	color: #000000;
+}
+#form-action.margin{
+	
+	margin-left: 30px !important;
+}
+#update{
+	
+	background-color: #000000;
+	user-select: none;
+}
+#see{
+	
+	background-color: #000000;
+	user-select: none;
+}
+
