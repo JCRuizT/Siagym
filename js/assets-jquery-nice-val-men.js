@@ -277,7 +277,7 @@ function btnCommon(event){
 	
 	
 }
-function see(element,nombre,apellido,genero,identificacion,peso,estatura,natalicio,rol,centro,ficha,correo,dia,hora){
+function see(element,nombre,apellido,genero,identificacion,peso,estatura,natalicio,rol,centro,ficha,correo,vencimiento,dia,hora,schedule_time_id){
 	
 	btnCommon();
 	
@@ -459,9 +459,48 @@ function see(element,nombre,apellido,genero,identificacion,peso,estatura,natalic
 	html+="</div>";
 	
 	
+	if(schedule_time_id && schedule_time_id != ""){
+		html += "<div class='block-from ads'><strong>Horario:</strong> <span id='schedule-info'>Cargando...</span></div>";
+	}
+
 	html +="</div>";
 	
 	$("#vista").html(html);
+
+	if(schedule_time_id && schedule_time_id != ""){
+		var dayNames = {0:"Dom",1:"Lun",2:"Mar",3:"Mié",4:"Jue",5:"Vie",6:"Sáb"};
+		$.ajax({
+			data: { "send-get-schedules-by-role": "1", "role": rol },
+			async: true,
+			url: "asset/sendCrud.php",
+			type: 'post',
+			dataType: "json",
+			success: function(response){
+				if(response.validar == 1 && response.aviso.length > 0){
+					var found = null;
+					$.each(response.aviso, function(i, s){
+						$.each(s.times, function(j, t){
+							if(t.id == schedule_time_id){
+								found = {schedule: s, time: t};
+							}
+						});
+					});
+					if(found){
+						var daysStr = "";
+						$.each(found.schedule.days, function(j, d){
+							daysStr += dayNames[d] + " ";
+						});
+						var timeStr = "de " + found.time.start_time.substring(0,5) + " a " + found.time.end_time.substring(0,5);
+						$("#schedule-info").html("#" + found.schedule.id + " " + daysStr + "- " + timeStr);
+					}else{
+						$("#schedule-info").html("No disponible");
+					}
+				}else{
+					$("#schedule-info").html("No disponible");
+				}
+			}
+		});
+	}
 	
 	}
 }
