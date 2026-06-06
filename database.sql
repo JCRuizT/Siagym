@@ -37,10 +37,11 @@ CREATE TABLE IF NOT EXISTS carnet (
 
 CREATE TABLE IF NOT EXISTS horario (
   id_aprendiz INT NOT NULL,
-  horas TINYINT DEFAULT NULL,
-  dias TINYINT DEFAULT NULL,
+  schedule_time_id INT DEFAULT NULL,
   PRIMARY KEY (id_aprendiz),
-  CONSTRAINT fk_horario_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion)
+  KEY idx_horario_sched_time (schedule_time_id),
+  CONSTRAINT fk_horario_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion),
+  CONSTRAINT fk_horario_sched_time FOREIGN KEY (schedule_time_id) REFERENCES schedule_days_times(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS asistencia (

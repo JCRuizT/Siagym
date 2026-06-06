@@ -62,6 +62,10 @@ class CrudSiaGym{
 				self::conexion();
 				self::scheduleToggle();
 				
+			}else if(isset($_POST["send-get-schedules-by-role"])){
+				self::conexion();
+				self::scheduleGetByRole();
+				
 			}else if(isset($_POST["ListarYear"])){
 				
 				
@@ -203,9 +207,9 @@ class CrudSiaGym{
 		$hora = $_POST["hora"];
 		
 		
-		if(!empty($nombre) and $rol!=0 and !empty($apellido) and !empty($identificacion) and $natalicio0!=00 and  $natalicio1!=00 and $natalicio2!=0 and $fecha_ven_carnet0 !=00 and $fecha_ven_carnet1 != 00 and $fecha_ven_carnet2 !=0  and !empty($genero) and !empty($correo) and !empty($centro) and $peso!=0 and  $estatura!=0 and $dia!=0 and $hora!=0 and $genero!=0){
+		if(!empty($nombre) and $rol!=0 and !empty($apellido) and !empty($identificacion) and $natalicio0!=00 and  $natalicio1!=00 and $natalicio2!=0 and $fecha_ven_carnet0 !=00 and $fecha_ven_carnet1 != 00 and $fecha_ven_carnet2 !=0  and !empty($genero) and !empty($correo) and !empty($centro) and $peso!=0 and  $estatura!=0 and $hora!=0 and $genero!=0){
 			
-			if(is_numeric($identificacion) and is_numeric($estatura) and is_numeric($peso)  and is_numeric($dia) and is_numeric($hora) and is_numeric($ficha) and is_string($nombre) and is_string($apellido) and is_numeric($fecha_ven_carnet0) and is_numeric($fecha_ven_carnet1) and is_numeric($fecha_ven_carnet2) and is_numeric($natalicio0) and is_numeric($natalicio1) and is_numeric($natalicio2)){
+			if(is_numeric($identificacion) and is_numeric($estatura) and is_numeric($peso)  and is_numeric($hora) and is_numeric($ficha) and is_string($nombre) and is_string($apellido) and is_numeric($fecha_ven_carnet0) and is_numeric($fecha_ven_carnet1) and is_numeric($fecha_ven_carnet2) and is_numeric($natalicio0) and is_numeric($natalicio1) and is_numeric($natalicio2)){
 				
 			$select = $this->sql("select identificacion from usuarios where identificacion = ".$identificacion);
 			
@@ -233,7 +237,7 @@ class CrudSiaGym{
 				
 					$query2 = $this->conexion->query($insert2);
 					
-					$insert3 = $this->sql("insert into horario(horas,dias,id_aprendiz)values(".$hora.",".$dia.",".$identificacion.")");
+					$insert3 = $this->sql("insert into horario(schedule_time_id,id_aprendiz)values(".$hora.",".$identificacion.")");
 				
 					$query3 = $this->conexion->query($insert3);
 				
@@ -290,230 +294,113 @@ class CrudSiaGym{
 		date_default_timezone_set ("America/Bogota");
 		$identificacion = $_POST["identificacion"];
 
-		if($identificacion!=""){
-			
-		if(is_numeric($identificacion)){
+		if($identificacion != "" && is_numeric($identificacion)){
 			
 			$select = $this->sql("select identificacion from usuarios where identificacion = ".$identificacion);
-			
 			$queryuser = $this->conexion->query($select);
-			
 			$row = $queryuser->num_rows;
-			
-			if(!$queryuser){
-				$this->response["aviso"] = "error";
-				$this->response["validar"] = 0;
-			}
-			if($row >0){
-				
-				
-				$fecha = $_POST["fecha"];
-				$hora = $_POST["hora"];
-				$yearl = $year= substr($fecha,0,4);
-				$selectconfirm = $this->sql("select * from asistencia where id_aprendiz = ".$identificacion." and fecha = '".$fecha."'");
-				$queryConfim = $this->conexion->query($selectconfirm);
-				
-				$row = $queryConfim->num_rows;
-				
-				
-				
-				
-				if($row == 0){
-					
-					$selectall = $this->sql("select * from usuarios where identificacion = ".$identificacion);
-					$queryall = $this->conexion->query($selectall);
-					$assocall = $queryall->fetch_assoc();
-					
-					$rol = $assocall["rol"];
-					
-					$selecall = $this->sql("select * from horario where id_aprendiz = ".$identificacion);
-					$queryll = $this->conexion->query($selecall);
-					$assocl = $queryll->fetch_assoc();
 
-					$horass = $assocl["horas"];
-					$diass = $assocl["dias"];
-					
-					$confdate = $this->dia($fecha);
-
-					if($rol == 1){
-						
-						if($diass == 1){
-							
-							if($confdate == "l" || $confdate == "x" || $confdate == "v"){
-							
-								if($horass == 1){
-									
-									if($hora == 7 || $hora == 8 || $hora == 9 || $hora == 10 || $hora == 11 || $hora == 12 || $hora == 13){
-										
-										$insertAsistencia = $this->sql("insert into asistencia(fecha,year,hora,id_aprendiz) values('".$fecha."',".$yearl.",".$hora.",".$identificacion.")");
-								
-										$queryInsert = $this->conexion->query($insertAsistencia);
-								
-										if($queryInsert){
-									
-											$this->response["aviso"] = "Asistencia registrada correctamente";
-											$this->response["validar"] = 1;
-									
-										}else{
-									
-											$this->response["aviso"] = "Ha ocurrido un error";
-											$this->response["validar"] = 0;
-										}
-									}else{
-										
-										$this->response["aviso"] = "Este usuario no puede ingresar en esta hora";
-										$this->response["validar"] = 0;
-									}
-								}else if($horass == 2){
-									
-									if( $hora == 14 || $hora == 15 || $hora == 16 || $hora == 17 || $hora==18 || $hora == 19 ){
-										
-										$insertAsistencia = $this->sql("insert into asistencia(fecha,year,hora,id_aprendiz) values('".$fecha."',".$yearl.",".$hora.",".$identificacion.")");
-								
-										$queryInsert = $this->conexion->query($insertAsistencia);
-								
-										if($queryInsert){
-									
-											$this->response["aviso"] = "Asistencia registrada correctamente";
-											$this->response["validar"] = 1;
-									
-										}else{
-									
-											$this->response["aviso"] = "Ha ocurrido un error";
-											$this->response["validar"] = 0;
-										}
-									}else{
-										
-										$this->response["aviso"] = "Este usuario no puede ingresar en esta hora";
-										$this->response["validar"] = 0;
-									}
-									
-									
-								}
-								
-							}else{
-								
-								$this->response["aviso"] = "Este usuario no puede ingresar el dia de hoy";
-								$this->response["validar"] = 0;
-							}
-							
-						}else if($diass == 2){
-							
-							
-							if($confdate == "m" || $confdate == "j" || $confdate == "s"){
-					
-								if($horass == 1){
-									
-									
-									if($hora == 7 || $hora == 8 || $hora == 9 || $hora == 10 || $hora == 11 || $hora == 12 || $hora == 13){
-										
-										$insertAsistencia = $this->sql("insert into asistencia(fecha,year,hora,id_aprendiz) values('".$fecha."',".$yearl.",".$hora.",".$identificacion.")");
-								
-										$queryInsert = $this->conexion->query($insertAsistencia);
-								
-										if($queryInsert){
-									
-											$this->response["aviso"] = "Asistencia registrada correctamente";
-											$this->response["validar"] = 1;
-									
-										}else{
-									
-											$this->response["aviso"] = "Ha ocurrido un error";
-											$this->response["validar"] = 0;
-										}
-									}else{
-										
-										$this->response["aviso"] = "Este usuario no puede ingresar en esta hora";
-										$this->response["validar"] = 0;
-									}
-									
-								}
-
-								
-								
-								
-							}else{
-								
-								$this->response["aviso"] = "Este usuario no puede ingresar el dia de hoy";
-								$this->response["validar"] = 0;
-								
-							}
-
-							
-							
-							
-						}
-						
-					}else if($rol == 2){
-							
-						if($confdate == "m" || $confdate== "j"){
-							
-							if($hora == 16 || $hora == 17){
-								
-								$insertAsistencia = $this->sql("insert into asistencia(fecha,year,hora,id_aprendiz) values('".$fecha."',".$yearl.",".$hora.",".$identificacion.")");
-								
-								$queryInsert = $this->conexion->query($insertAsistencia);
-								
-								if($queryInsert){
-									
-										$this->response["aviso"] = "Asistencia registrada correctamente";
-										$this->response["validar"] = 1;
-									
-								}else{
-									
-										$this->response["aviso"] = "Ha ocurrido un error";
-										$this->response["validar"] = 0;
-								}
-							}else{
-								
-								$this->response["aviso"] = "Este usuario no puede ingresar en esta hora";
-								$this->response["validar"] = 0;
-								
-							}
-							
-						}else{
-							
-								$this->response["aviso"] = "Este usuario no puede ingresar el dia de hoy";
-								$this->response["validar"] = 0;
-							
-						}
-						
-					}
-					
-					
-					
-				}else{
-					
-					$this->response["aviso"] = "Este Usuario ya ingreso "; 
-					$this->response["validar"] = 0;
-				}
-				
-
-				
-				
-				
-				
-			}else{
-				
+			if($row == 0){
 				$this->response["aviso"] = "Este usuario no existe";
 				$this->response["validar"] = 0;
-				
+				echo json_encode($this->response);
+				return;
+			}
+
+			$fecha = $_POST["fecha"];
+			$hora = (int)$_POST["hora"];
+			$yearl = substr($fecha,0,4);
+
+			$selectconfirm = $this->sql("select * from asistencia where id_aprendiz = ".$identificacion." and fecha = '".$fecha."'");
+			$queryConfim = $this->conexion->query($selectconfirm);
+
+			if($queryConfim->num_rows > 0){
+				$this->response["aviso"] = "Este Usuario ya ingreso";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+
+			$selecall = $this->sql("select * from horario where id_aprendiz = ".$identificacion);
+			$queryll = $this->conexion->query($selecall);
+			$assocl = $queryll->fetch_assoc();
+
+			if(!$assocl || empty($assocl["schedule_time_id"])){
+				$this->response["aviso"] = "El usuario no tiene un horario asignado";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+
+			$timeId = (int)$assocl["schedule_time_id"];
+
+			$selectTime = $this->sql("SELECT t.start_time, t.end_time, t.schedule_days_id, d.schedule_id, d.day_of_week FROM schedule_days_times t JOIN schedule_days d ON d.id = t.schedule_days_id WHERE t.id=$timeId");
+			$queryTime = $this->conexion->query($selectTime);
+			$timeRow = $queryTime->fetch_assoc();
+
+			if(!$timeRow){
+				$this->response["aviso"] = "El horario asignado ya no está disponible";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+
+			$scheduleId = (int)$timeRow["schedule_id"];
+
+			$checkActive = $this->sql("SELECT estado FROM schedules WHERE id=$scheduleId");
+			$qActive = $this->conexion->query($checkActive);
+			$activeRow = $qActive->fetch_assoc();
+
+			if(!$activeRow || $activeRow["estado"] == 0){
+				$this->response["aviso"] = "El horario asignado no está activo";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+			$dayOfWeek = (int)date("w", strtotime($fecha));
+
+			$selectDays = $this->sql("SELECT id FROM schedule_days WHERE schedule_id=$scheduleId AND day_of_week=$dayOfWeek");
+			$queryDays = $this->conexion->query($selectDays);
+
+			if($queryDays->num_rows == 0){
+				$this->response["aviso"] = "Este usuario no puede ingresar el dia de hoy";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+
+			$startH = (int)substr($timeRow["start_time"], 0, 2);
+			$startM = (int)substr($timeRow["start_time"], 3, 2);
+			$endH = (int)substr($timeRow["end_time"], 0, 2);
+			$endM = (int)substr($timeRow["end_time"], 3, 2);
+
+			$horaMinutos = $hora * 60;
+			$inicioMinutos = $startH * 60 + $startM;
+			$finMinutos = $endH * 60 + $endM;
+
+			if(!($horaMinutos >= $inicioMinutos && $horaMinutos < $finMinutos)){
+				$this->response["aviso"] = "Este usuario no puede ingresar en esta hora";
+				$this->response["validar"] = 0;
+				echo json_encode($this->response);
+				return;
+			}
+
+			$insertAsistencia = $this->sql("insert into asistencia(fecha,year,hora,id_aprendiz) values('".$fecha."',".$yearl.",".$hora.",".$identificacion.")");
+			$queryInsert = $this->conexion->query($insertAsistencia);
+
+			if($queryInsert){
+				$this->response["aviso"] = "Asistencia registrada correctamente";
+				$this->response["validar"] = 1;
+			}else{
+				$this->response["aviso"] = "Ha ocurrido un error";
+				$this->response["validar"] = 0;
 			}
 		}else{
-			
-			
-				$this->response["aviso"] = "(solo numeros)";
-				$this->response["validar"] =  0;
-		}
-		}else{
-				
-				$this->response["aviso"] = "llene el campo";
-				$this->response["validar"] = 0;
-				
+			$this->response["aviso"] = $identificacion == "" ? "llene el campo" : "(solo numeros)";
+			$this->response["validar"] = 0;
 		}
 		
 		echo json_encode($this->response);
-
 	}
 	
 	
@@ -598,7 +485,7 @@ class CrudSiaGym{
 					$query2 = $this->conexion->query($update2);
 				
 				
-					$update3 = $this->sql("update horario set horas=".$hora.",dias=".$dia." where id_aprendiz =".$identificacion_temp);
+					$update3 = $this->sql("update horario set schedule_time_id=".$hora." where id_aprendiz =".$identificacion_temp);
 				
 					$query3 = $this->conexion->query($update3);
 					
@@ -669,7 +556,7 @@ class CrudSiaGym{
 				$query3 = $this->conexion->query($select3);
 				$assoc2 = $query3->fetch_assoc();
 				
-				$this->response["aviso"] =  array("nombre"=>$assoc["nombre"],"apellido"=>$assoc["apellido"],"identificacion"=>$assoc["identificacion"],"genero"=>$assoc["genero"],"peso"=>$assoc["peso"],"estatura"=>$assoc["estatura"],"natalicio"=>$assoc["natalicio"],"rol"=>$assoc["rol"],"centro"=>$assoc1["centro"],"ficha"=>$assoc1["ficha"],"correo"=>$assoc["correo"],"vencimiento"=>$assoc1["fecha_vencimiento"],"hora"=>$assoc2["horas"],"dia"=>$assoc2["dias"]);
+				$this->response["aviso"] =  array("nombre"=>$assoc["nombre"],"apellido"=>$assoc["apellido"],"identificacion"=>$assoc["identificacion"],"genero"=>$assoc["genero"],"peso"=>$assoc["peso"],"estatura"=>$assoc["estatura"],"natalicio"=>$assoc["natalicio"],"rol"=>$assoc["rol"],"centro"=>$assoc1["centro"],"ficha"=>$assoc1["ficha"],"correo"=>$assoc["correo"],"vencimiento"=>$assoc1["fecha_vencimiento"],"hora"=>"","dia"=>"","schedule_time_id"=>$assoc2["schedule_time_id"]);
 				$this->response["validar"] = 1;
 			}else{
 				
@@ -893,7 +780,7 @@ class CrudSiaGym{
 	
 	private function scheduleCreate(){
 		$role = (int)$_POST["role"];
-		$active = isset($_POST["active"]) ? 1 : 0;
+		$active = (isset($_POST["active"]) && $_POST["active"] === "1") ? 1 : 0;
 
 		if($role == 0){
 			$this->response["aviso"] = "Seleccione un rol";
@@ -967,7 +854,7 @@ class CrudSiaGym{
 		}
 
 		$role = (int)$_POST["role"];
-		$active = isset($_POST["active"]) ? 1 : 0;
+		$active = (isset($_POST["active"]) && $_POST["active"] === "1") ? 1 : 0;
 
 		$this->conexion->query("START TRANSACTION");
 
@@ -982,35 +869,86 @@ class CrudSiaGym{
 			return;
 		}
 
-		$deleteTimes = $this->sql("DELETE FROM schedule_days_times WHERE schedule_days_id IN (SELECT id FROM schedule_days WHERE schedule_id=$id)");
-		$this->conexion->query($deleteTimes);
-
-		$deleteDays = $this->sql("DELETE FROM schedule_days WHERE schedule_id=$id");
-		$this->conexion->query($deleteDays);
-
 		$days = $_POST["days"] ?? [];
 		$timeStarts = $_POST["time_start"] ?? [];
 		$timeEnds = $_POST["time_end"] ?? [];
 
-		$scheduleDayIds = [];
-		$ok = true;
-
-		foreach($days as $day){
-			$day = (int)$day;
-			$insert = $this->sql("INSERT INTO schedule_days (schedule_id, day_of_week) VALUES ($id, $day)");
-			$q = $this->conexion->query($insert);
-			if(!$q){ $ok = false; break; }
-			$scheduleDayIds[] = $this->conexion->insert_id;
+		$timeRanges = [];
+		foreach($timeStarts as $i => $start){
+			$end = $timeEnds[$i] ?? '';
+			if(!empty($start) && !empty($end)){
+				$timeRanges[] = ["start" => $start, "end" => $end];
+			}
 		}
 
+		$existingDays = [];
+		$qDays = $this->conexion->query($this->sql("SELECT id, day_of_week FROM schedule_days WHERE schedule_id=$id"));
+		while($row = $qDays->fetch_assoc()){
+			$existingDays[(int)$row["day_of_week"]] = (int)$row["id"];
+		}
+
+		$daysToRemove = array_diff(array_keys($existingDays), $days);
+		$daysToAdd = array_diff($days, array_keys($existingDays));
+		$daysToKeep = array_intersect($days, array_keys($existingDays));
+
+		$ok = true;
+
+		foreach($daysToRemove as $day){
+			$sdId = $existingDays[$day];
+			$this->conexion->query($this->sql("DELETE FROM schedule_days_times WHERE schedule_days_id=$sdId"));
+			$this->conexion->query($this->sql("DELETE FROM schedule_days WHERE id=$sdId"));
+			if($this->conexion->error){ $ok = false; break; }
+		}
+
+		$newDayIds = [];
 		if($ok){
-			foreach($timeStarts as $i => $start){
-				$end = $timeEnds[$i] ?? '';
-				if(empty($start) || empty($end)) continue;
-				foreach($scheduleDayIds as $sdId){
-					$insert = $this->sql("INSERT INTO schedule_days_times (schedule_days_id, start_time, end_time) VALUES ($sdId, '$start', '$end')");
-					$q = $this->conexion->query($insert);
-					if(!$q){ $ok = false; break; }
+			foreach($daysToAdd as $day){
+				$day = (int)$day;
+				$this->conexion->query($this->sql("INSERT INTO schedule_days (schedule_id, day_of_week) VALUES ($id, $day)"));
+				if($this->conexion->error){ $ok = false; break; }
+				$newDayIds[] = $this->conexion->insert_id;
+			}
+		}
+
+		$allDayIds = [];
+		if($ok){
+			foreach($daysToKeep as $day){
+				$allDayIds[] = $existingDays[$day];
+			}
+			$allDayIds = array_merge($allDayIds, $newDayIds);
+
+			foreach($allDayIds as $sdId){
+				$existingTimes = [];
+				$qTimes = $this->conexion->query($this->sql("SELECT id, start_time, end_time FROM schedule_days_times WHERE schedule_days_id=$sdId ORDER BY start_time"));
+				while($row = $qTimes->fetch_assoc()){
+					$existingTimes[] = $row;
+				}
+
+				$numExisting = count($existingTimes);
+				$numNew = count($timeRanges);
+
+				for($i = 0; $i < min($numExisting, $numNew); $i++){
+					$tid = $existingTimes[$i]["id"];
+					$start = $timeRanges[$i]["start"];
+					$end = $timeRanges[$i]["end"];
+					$this->conexion->query($this->sql("UPDATE schedule_days_times SET start_time='$start', end_time='$end' WHERE id=$tid"));
+					if($this->conexion->error){ $ok = false; break; }
+				}
+				if(!$ok) break;
+
+				for($i = $numNew; $i < $numExisting; $i++){
+					$tid = $existingTimes[$i]["id"];
+					$this->conexion->query($this->sql("UPDATE horario SET schedule_time_id=NULL WHERE schedule_time_id=$tid"));
+					$this->conexion->query($this->sql("DELETE FROM schedule_days_times WHERE id=$tid"));
+					if($this->conexion->error){ $ok = false; break; }
+				}
+				if(!$ok) break;
+
+				for($i = $numExisting; $i < $numNew; $i++){
+					$start = $timeRanges[$i]["start"];
+					$end = $timeRanges[$i]["end"];
+					$this->conexion->query($this->sql("INSERT INTO schedule_days_times (schedule_days_id, start_time, end_time) VALUES ($sdId, '$start', '$end')"));
+					if($this->conexion->error){ $ok = false; break; }
 				}
 				if(!$ok) break;
 			}
@@ -1089,7 +1027,7 @@ class CrudSiaGym{
 	}
 
 	private function scheduleGet(){
-		$select = $this->sql("SELECT * FROM schedules ORDER BY id DESC");
+		$select = $this->sql("SELECT * FROM schedules ORDER BY estado DESC, id DESC");
 		$query = $this->conexion->query($select);
 
 		$schedules = array();
@@ -1123,6 +1061,55 @@ class CrudSiaGym{
 				"days" => $days,
 				"times" => $times,
 				"active" => (int)$row["estado"]
+			);
+		}
+
+		$this->response["aviso"] = $schedules;
+		$this->response["validar"] = 1;
+		echo json_encode($this->response);
+	}
+
+	private function scheduleGetByRole(){
+		$role = (int)($_POST["role"] ?? 0);
+		if($role == 0){
+			$this->response["aviso"] = array();
+			$this->response["validar"] = 1;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$select = $this->sql("SELECT * FROM schedules WHERE role=$role AND estado=1 ORDER BY id DESC");
+		$query = $this->conexion->query($select);
+
+		$schedules = array();
+
+		while($row = $query->fetch_assoc()){
+			$scheduleId = $row["id"];
+
+			$selectDays = $this->sql("SELECT day_of_week FROM schedule_days WHERE schedule_id=$scheduleId ORDER BY day_of_week");
+			$queryDays = $this->conexion->query($selectDays);
+
+			$days = array();
+			while($dayRow = $queryDays->fetch_assoc()){
+				$days[] = (int)$dayRow["day_of_week"];
+			}
+
+			$selectTimes = $this->sql("SELECT MIN(id) as id, start_time, end_time FROM schedule_days_times WHERE schedule_days_id IN (SELECT id FROM schedule_days WHERE schedule_id=$scheduleId) GROUP BY start_time, end_time ORDER BY start_time");
+			$queryTimes = $this->conexion->query($selectTimes);
+
+			$times = array();
+			while($timeRow = $queryTimes->fetch_assoc()){
+				$times[] = array(
+					"id" => (int)$timeRow["id"],
+					"start_time" => $timeRow["start_time"],
+					"end_time" => $timeRow["end_time"]
+				);
+			}
+
+			$schedules[] = array(
+				"id" => (int)$row["id"],
+				"days" => $days,
+				"times" => $times
 			);
 		}
 
