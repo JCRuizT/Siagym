@@ -42,6 +42,26 @@ class CrudSiaGym{
 				self::statistics();
 				
 				
+			}else if(isset($_POST["send-schedule-create"])){
+				self::conexion();
+				self::scheduleCreate();
+				
+			}else if(isset($_POST["send-schedule-update"])){
+				self::conexion();
+				self::scheduleUpdate();
+				
+			}else if(isset($_POST["send-schedule-delete"])){
+				self::conexion();
+				self::scheduleDelete();
+				
+			}else if(isset($_POST["send-get-schedules"])){
+				self::conexion();
+				self::scheduleGet();
+				
+			}else if(isset($_POST["send-schedule-toggle"])){
+				self::conexion();
+				self::scheduleToggle();
+				
 			}else if(isset($_POST["ListarYear"])){
 				
 				
@@ -871,6 +891,246 @@ class CrudSiaGym{
 	}
 	
 	
+	private function scheduleCreate(){
+		$role = (int)$_POST["role"];
+		$active = isset($_POST["active"]) ? 1 : 0;
+
+		if($role == 0){
+			$this->response["aviso"] = "Seleccione un rol";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$this->conexion->query("START TRANSACTION");
+
+		$insert = $this->sql("INSERT INTO schedules (role, estado) VALUES ($role, $active)");
+		$query = $this->conexion->query($insert);
+
+		if(!$query){
+			$this->conexion->query("ROLLBACK");
+			$this->response["aviso"] = "Error al crear la plantilla";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$scheduleId = $this->conexion->insert_id;
+		$days = $_POST["days"] ?? [];
+		$timeStarts = $_POST["time_start"] ?? [];
+		$timeEnds = $_POST["time_end"] ?? [];
+
+		$scheduleDayIds = [];
+		$ok = true;
+
+		foreach($days as $day){
+			$day = (int)$day;
+			$insert = $this->sql("INSERT INTO schedule_days (schedule_id, day_of_week) VALUES ($scheduleId, $day)");
+			$q = $this->conexion->query($insert);
+			if(!$q){ $ok = false; break; }
+			$scheduleDayIds[] = $this->conexion->insert_id;
+		}
+
+		if($ok){
+			foreach($timeStarts as $i => $start){
+				$end = $timeEnds[$i] ?? '';
+				if(empty($start) || empty($end)) continue;
+				foreach($scheduleDayIds as $sdId){
+					$insert = $this->sql("INSERT INTO schedule_days_times (schedule_days_id, start_time, end_time) VALUES ($sdId, '$start', '$end')");
+					$q = $this->conexion->query($insert);
+					if(!$q){ $ok = false; break; }
+				}
+				if(!$ok) break;
+			}
+		}
+
+		if($ok){
+			$this->conexion->query("COMMIT");
+			$this->response["aviso"] = "Plantilla de horario creada correctamente";
+			$this->response["validar"] = 1;
+		}else{
+			$this->conexion->query("ROLLBACK");
+			$this->response["aviso"] = "Error al guardar los días y horarios";
+			$this->response["validar"] = 0;
+		}
+
+		echo json_encode($this->response);
+	}
+
+	private function scheduleUpdate(){
+		$id = (int)($_POST["id"] ?? 0);
+		if($id == 0){
+			$this->response["aviso"] = "ID de plantilla inválido";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$role = (int)$_POST["role"];
+		$active = isset($_POST["active"]) ? 1 : 0;
+
+		$this->conexion->query("START TRANSACTION");
+
+		$update = $this->sql("UPDATE schedules SET role=$role, estado=$active WHERE id=$id");
+		$q = $this->conexion->query($update);
+
+		if(!$q){
+			$this->conexion->query("ROLLBACK");
+			$this->response["aviso"] = "Error al actualizar la plantilla";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$deleteTimes = $this->sql("DELETE FROM schedule_days_times WHERE schedule_days_id IN (SELECT id FROM schedule_days WHERE schedule_id=$id)");
+		$this->conexion->query($deleteTimes);
+
+		$deleteDays = $this->sql("DELETE FROM schedule_days WHERE schedule_id=$id");
+		$this->conexion->query($deleteDays);
+
+		$days = $_POST["days"] ?? [];
+		$timeStarts = $_POST["time_start"] ?? [];
+		$timeEnds = $_POST["time_end"] ?? [];
+
+		$scheduleDayIds = [];
+		$ok = true;
+
+		foreach($days as $day){
+			$day = (int)$day;
+			$insert = $this->sql("INSERT INTO schedule_days (schedule_id, day_of_week) VALUES ($id, $day)");
+			$q = $this->conexion->query($insert);
+			if(!$q){ $ok = false; break; }
+			$scheduleDayIds[] = $this->conexion->insert_id;
+		}
+
+		if($ok){
+			foreach($timeStarts as $i => $start){
+				$end = $timeEnds[$i] ?? '';
+				if(empty($start) || empty($end)) continue;
+				foreach($scheduleDayIds as $sdId){
+					$insert = $this->sql("INSERT INTO schedule_days_times (schedule_days_id, start_time, end_time) VALUES ($sdId, '$start', '$end')");
+					$q = $this->conexion->query($insert);
+					if(!$q){ $ok = false; break; }
+				}
+				if(!$ok) break;
+			}
+		}
+
+		if($ok){
+			$this->conexion->query("COMMIT");
+			$this->response["aviso"] = "Plantilla de horario actualizada correctamente";
+			$this->response["validar"] = 1;
+		}else{
+			$this->conexion->query("ROLLBACK");
+			$this->response["aviso"] = "Error al actualizar los días y horarios";
+			$this->response["validar"] = 0;
+		}
+
+		echo json_encode($this->response);
+	}
+
+	private function scheduleDelete(){
+		$id = (int)($_POST["id"] ?? 0);
+		if($id == 0){
+			$this->response["aviso"] = "ID de plantilla inválido";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$update = $this->sql("UPDATE schedules SET estado=0 WHERE id=$id");
+		$q = $this->conexion->query($update);
+
+		if($q){
+			$this->response["aviso"] = "Plantilla de horario desactivada correctamente";
+			$this->response["validar"] = 1;
+		}else{
+			$this->response["aviso"] = "Error al desactivar la plantilla";
+			$this->response["validar"] = 0;
+		}
+
+		echo json_encode($this->response);
+	}
+
+	private function scheduleToggle(){
+		$id = (int)($_POST["id"] ?? 0);
+		if($id == 0){
+			$this->response["aviso"] = "ID de plantilla inválido";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$select = $this->sql("SELECT estado FROM schedules WHERE id=$id");
+		$query = $this->conexion->query($select);
+		$row = $query->fetch_assoc();
+
+		if(!$row){
+			$this->response["aviso"] = "Plantilla no encontrada";
+			$this->response["validar"] = 0;
+			echo json_encode($this->response);
+			return;
+		}
+
+		$nuevoEstado = $row["estado"] == 1 ? 0 : 1;
+		$update = $this->sql("UPDATE schedules SET estado=$nuevoEstado WHERE id=$id");
+		$q = $this->conexion->query($update);
+
+		if($q){
+			$mensaje = $nuevoEstado == 1 ? "Plantilla activada correctamente" : "Plantilla desactivada correctamente";
+			$this->response["aviso"] = $mensaje;
+			$this->response["validar"] = 1;
+		}else{
+			$this->response["aviso"] = "Error al cambiar el estado de la plantilla";
+			$this->response["validar"] = 0;
+		}
+
+		echo json_encode($this->response);
+	}
+
+	private function scheduleGet(){
+		$select = $this->sql("SELECT * FROM schedules ORDER BY id DESC");
+		$query = $this->conexion->query($select);
+
+		$schedules = array();
+
+		while($row = $query->fetch_assoc()){
+			$scheduleId = $row["id"];
+
+			$selectDays = $this->sql("SELECT day_of_week FROM schedule_days WHERE schedule_id=$scheduleId ORDER BY day_of_week");
+			$queryDays = $this->conexion->query($selectDays);
+
+			$days = array();
+			while($dayRow = $queryDays->fetch_assoc()){
+				$days[] = (int)$dayRow["day_of_week"];
+			}
+
+			$selectTimes = $this->sql("SELECT DISTINCT start_time, end_time FROM schedule_days_times WHERE schedule_days_id IN (SELECT id FROM schedule_days WHERE schedule_id=$scheduleId) ORDER BY start_time");
+			$queryTimes = $this->conexion->query($selectTimes);
+
+			$times = array();
+			while($timeRow = $queryTimes->fetch_assoc()){
+				$times[] = array(
+					"start_time" => $timeRow["start_time"],
+					"end_time" => $timeRow["end_time"]
+				);
+			}
+
+			$schedules[] = array(
+				"id" => (int)$row["id"],
+				"role" => (int)$row["role"],
+				"estado" => (int)$row["estado"],
+				"days" => $days,
+				"times" => $times,
+				"active" => (int)$row["estado"]
+			);
+		}
+
+		$this->response["aviso"] = $schedules;
+		$this->response["validar"] = 1;
+		echo json_encode($this->response);
+	}
+
 	private function conexion(){
 		
 		include("conexion.php");

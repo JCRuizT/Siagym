@@ -837,6 +837,10 @@ event.preventDefault();
 		$("#container-siagym").load("interfaces/statistics.php");
 		listar();
 
+	}else if(getQueryVariable("schedules") != false){
+		
+		$("#container-siagym").load("interfaces/schedules.php");
+
 	}
 	
 	changeItem();
@@ -1036,6 +1040,7 @@ function changeItem(){
 	ResetItem("#link-assistance","#link-assistance > span","#ffffff","#000000");
 	ResetItem("#link-search","#link-search > span","#ffffff","#000000");
 	ResetItem("#link-statistics","#link-statistics > span","#ffffff","#000000");
+	ResetItem("#link-schedules","#link-schedules > span","#ffffff","#000000");
 
 
 		$("#link-add").css({
@@ -1054,6 +1059,7 @@ function changeItem(){
 	ResetItem("#link-add","#link-add > span","#ffffff","#000000");
 	ResetItem("#link-search","#link-search > span","#ffffff","#000000");
 	ResetItem("#link-statistics","#link-statistics > span","#ffffff","#000000");
+	ResetItem("#link-schedules","#link-schedules > span","#ffffff","#000000");
 	
 	
 		$("#link-assistance").css({
@@ -1073,6 +1079,7 @@ function changeItem(){
 	ResetItem("#link-assistance","#link-assistance > span","#ffffff","#000000");
 	ResetItem("#link-add","#link-add > span","#ffffff","#000000");
 	ResetItem("#link-statistics","#link-statistics > span","#ffffff","#000000");
+	ResetItem("#link-schedules","#link-schedules > span","#ffffff","#000000");
 		$("#link-search").css({
 			
 			background: fondo,
@@ -1089,6 +1096,7 @@ function changeItem(){
 	ResetItem("#link-assistance","#link-assistance > span","#ffffff","#000000");
 	ResetItem("#link-search","#link-search > span","#ffffff","#000000");
 	ResetItem("#link-add","#link-add > span","#ffffff","#000000");
+	ResetItem("#link-schedules","#link-schedules > span","#ffffff","#000000");
 	
 		$("#link-statistics").css({
 			
@@ -1097,6 +1105,24 @@ function changeItem(){
 		});
 		
 		$("#link-statistics > span").css({
+			
+			color: color
+		});
+		
+	}else if(getQueryVariable("schedules") != false){
+		
+	ResetItem("#link-assistance","#link-assistance > span","#ffffff","#000000");
+	ResetItem("#link-search","#link-search > span","#ffffff","#000000");
+	ResetItem("#link-statistics","#link-statistics > span","#ffffff","#000000");
+	ResetItem("#link-add","#link-add > span","#ffffff","#000000");
+	
+		$("#link-schedules").css({
+			
+			background: fondo,
+			borderTop: borde
+		});
+		
+		$("#link-schedules > span").css({
 			
 			color: color
 		});
