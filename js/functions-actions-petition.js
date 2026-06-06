@@ -172,6 +172,12 @@ function add(){
 
 function search(){
 	
+	if(document.getElementById("vista")){
+		var parent = document.getElementById("container-siagym");
+		parent.removeChild(document.getElementById("vista"));
+		$("#form-action").removeClass("left margin");
+	}
+
 	var all = $("#form-search").serialize();
 	$.ajax({
                 data:  all,
@@ -197,7 +203,7 @@ function search(){
 					
 					document.getElementById("see").addEventListener("click",function(){
 						
-						see(this,response.aviso.nombre,response.aviso.apellido,response.aviso.genero,response.aviso.identificacion,response.aviso.peso,response.aviso.estatura,response.aviso.natalicio,response.aviso.rol,response.aviso.centro,response.aviso.ficha,response.aviso.correo,response.aviso.vencimiento,response.aviso.dia,response.aviso.hora);
+						see(this,response.aviso.nombre,response.aviso.apellido,response.aviso.genero,response.aviso.identificacion,response.aviso.peso,response.aviso.estatura,response.aviso.natalicio,response.aviso.rol,response.aviso.centro,response.aviso.ficha,response.aviso.correo,response.aviso.vencimiento,response.aviso.dia,response.aviso.hora,response.aviso.schedule_time_id);
 						
 					},false);
 	

@@ -19,8 +19,7 @@ li{
 
 
 *{
-	
-	user-select: none !important;
+	user-select: none;
 }
 
 
@@ -31,33 +30,25 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 .img-log-sia{
-	    width: 100px;
-    height: 100px;
-    position: relative;
-    left: -10px;
-	position: relative;
-	top: 22px;
+	width: 80px;
+	height: 80px;
+	display: block;
 }
 .form-salir{
-	
-	position: absolute;
-	top: 130px;
-	left: 15px;
-	background
+	margin-top: 8px;
+	text-align: right;
 }
-
 
 .logo-string{
-	
-	position: absolute;
-    left: -60px;
-    top: -20px;
+	font-family: 'Anton', sans-serif;
+	font-style: italic;
+	font-size: 28px;
+	letter-spacing: 3px;
+	text-align: right;
+	display: block;
 }
 
-input[type="submit"]{
-	
-	cursor: pointer;
-}
+
 
 
 a{
@@ -74,10 +65,7 @@ input{
 	
 	overflow: hidden;
 }
-.container-header-subheader{
-	
-	z-index: 9999;
-}
+
 label{
 	
 	text-transform: capitalize;
@@ -118,12 +106,10 @@ table,tr,td,th,tbody,thead{
 }
 
 .flex-center{
-	
 	display: flex;
 	justify-content: center;
-	width: 100% !Important;
-	height: 100vh !Important;
-	
+	width: 100%;
+	height: 100vh;
 }
 
 .fnd-init{
@@ -131,14 +117,10 @@ table,tr,td,th,tbody,thead{
 	height: 800%;
 }
 .logo-container-sena-siagym{
-	
 	width: 95px;
 	height: 95px;
 	overflow: hidden;
-	position: relative;
-	left: 100px;
-	top: 25px;
-	
+	margin: 18px 0 0 0;
 }
 .logo-siagym{
 	
@@ -148,26 +130,17 @@ table,tr,td,th,tbody,thead{
 
 
 .siagym-logo-container{
-	
-	position: relative;
-	left: -100px;
-	top: 22px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	padding: 12px 15px 0 0;
 	user-select: none;
 	cursor: pointer;
-}
-.logo-string{
-	
-	font-family: 'Anton', sans-serif;
-	font-style: italic;
-	font-size: 40px;
-	letter-spacing: 5px;
 }
 
 
 .select-false{
-	
-	user-select: none !Important;
-	
+	user-select: none;
 }
 
 .flex{
@@ -229,10 +202,11 @@ table,tr,td,th,tbody,thead{
 }
 /*donde esta el lgo del sena arriba*/
 .header{
-	
 	width: 100%;
-	height: 140px;
-	background-color: #f1f1f1  ;
+	height: auto;
+	min-height: 110px;
+	padding: 5px 80px;
+	background-color: #f1f1f1;
 
 
 

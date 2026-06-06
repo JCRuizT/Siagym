@@ -4,7 +4,7 @@
 <h1>Plantillas de Horario</h1>
 </div>
 
-<div id="schedule-list" style="margin-bottom:20px"></div>
+<div id="schedule-list" class="schedule-list-wrapper" style="margin-bottom:20px"></div>
 
 <form action="asset/sendCrud.php" class="forms" method="post" id="form-schedule">
 <input type="hidden" name="id" id="schedule-id" value="">
@@ -41,7 +41,7 @@
 <tbody id="time-slots-body">
 </tbody>
 </table>
-<button type="button" id="add-time-slot" class="btn" style="float:right;margin-top:8px;width:auto;padding:6px 16px;font-size:13px">+ Agregar rango</button>
+<button type="button" id="add-time-slot" class="btn" style="float:right;margin-top:12px;width:auto;padding:6px 16px;font-size:13px">+ Agregar rango</button>
 </div>
 </div>
 
@@ -51,7 +51,7 @@
 </label>
 </div>
 
-<div class="block-from">
+<div class="block-from" style="margin-top:30px">
 <input type="submit" id="btn-save" value="Guardar" style="margin-right:8px">
 <button type="button" id="btn-cancel" class="btn" onclick="cancelEdit()" style="display:none">Cancelar</button>
 </div>
