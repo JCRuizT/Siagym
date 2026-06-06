@@ -8,7 +8,7 @@ if(!isset($_SESSION["administrador"])){
 	
 }else{
 	
-	if(!isset($_GET["assistance"])  and !isset($_GET["add"]) and !isset($_GET["search"]) and !isset($_GET["statistics"])){
+	if(!isset($_GET["assistance"])  and !isset($_GET["add"]) and !isset($_GET["search"]) and !isset($_GET["statistics"]) and !isset($_GET["schedules"])){
 		
 		
 		header("location: ?assistance");
@@ -82,6 +82,7 @@ $(function(){
 <a class="link-menu" href="?search" data-link-vinculo="interfaces/search.php"><li id="link-search" class="items-menu"><span>Buscar</span></li></a>
 
 <a class="link-menu" href="?statistics" data-link-vinculo="interfaces/statistics.php"><li id="link-statistics" class="items-menu"><span>Reportes</span></li></a>
+<a class="link-menu" href="?schedules" data-link-vinculo="interfaces/schedules.php"><li id="link-schedules" class="items-menu"><span>Horarios</span></li></a>
 
 </ul>
 
@@ -106,6 +107,10 @@ if(isset($_GET["assistance"])){
 }else if(isset($_GET["statistics"])){
 	
 	include("interfaces/statistics.php");
+	
+}else if(isset($_GET["schedules"])){
+	
+	include("interfaces/schedules.php");
 	
 }
 

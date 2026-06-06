@@ -2,6 +2,13 @@
 CREATE DATABASE IF NOT EXISTS siagym CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE siagym;
 
+
+CREATE TABLE IF NOT EXISTS rol (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    
 CREATE TABLE IF NOT EXISTS usuarios (
   identificacion INT NOT NULL,
   peso INT DEFAULT NULL,
@@ -11,9 +18,13 @@ CREATE TABLE IF NOT EXISTS usuarios (
   apellido VARCHAR(100) DEFAULT NULL,
   genero VARCHAR(20) DEFAULT NULL,
   correo VARCHAR(150) DEFAULT NULL,
-  rol TINYINT DEFAULT 1,
-  PRIMARY KEY (identificacion)
+  rol INT DEFAULT NULL,
+  PRIMARY KEY (identificacion),
+  KEY idx_usuarios_rol (rol),
+  CONSTRAINT fk_usuarios_rol FOREIGN KEY (rol) REFERENCES rol(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 CREATE TABLE IF NOT EXISTS carnet (
   id_aprendiz INT NOT NULL,
@@ -21,7 +32,7 @@ CREATE TABLE IF NOT EXISTS carnet (
   centro VARCHAR(50) DEFAULT NULL,
   fecha_vencimiento DATE DEFAULT NULL,
   PRIMARY KEY (id_aprendiz),
-  CONSTRAINT fk_carnet_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion) ON DELETE CASCADE
+  CONSTRAINT fk_carnet_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS horario (
@@ -29,7 +40,7 @@ CREATE TABLE IF NOT EXISTS horario (
   horas TINYINT DEFAULT NULL,
   dias TINYINT DEFAULT NULL,
   PRIMARY KEY (id_aprendiz),
-  CONSTRAINT fk_horario_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion) ON DELETE CASCADE
+  CONSTRAINT fk_horario_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS asistencia (
@@ -41,7 +52,7 @@ CREATE TABLE IF NOT EXISTS asistencia (
   PRIMARY KEY (id),
   KEY idx_asistencia_aprendiz (id_aprendiz),
   UNIQUE KEY uk_asistencia_aprendiz_fecha (id_aprendiz, fecha),
-  CONSTRAINT fk_asistencia_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion) ON DELETE CASCADE
+  CONSTRAINT fk_asistencia_usuarios FOREIGN KEY (id_aprendiz) REFERENCES usuarios(identificacion)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS admin (
@@ -50,5 +61,36 @@ CREATE TABLE IF NOT EXISTS admin (
   PRIMARY KEY (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+CREATE TABLE IF NOT EXISTS schedules (
+  id INT NOT NULL AUTO_INCREMENT,
+  role INT DEFAULT NULL,
+  estado TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (id),
+  KEY idx_schedule_role (role),
+  CONSTRAINT fk_schedule_rol FOREIGN KEY (role) REFERENCES rol(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS schedule_days (
+  id INT NOT NULL AUTO_INCREMENT,
+  schedule_id INT NOT NULL,
+  day_of_week TINYINT NOT NULL COMMENT '0=Sun..6=Sat',
+  PRIMARY KEY (id),
+  KEY idx_schedule_day (schedule_id, day_of_week),
+  CONSTRAINT fk_schedule_days_sched FOREIGN KEY (schedule_id) REFERENCES schedules(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS schedule_days_times (
+  id INT NOT NULL AUTO_INCREMENT,
+  schedule_days_id INT NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  start_date DATE DEFAULT NULL,
+  end_date DATE DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY idx_schedule_times (schedule_days_id),
+  CONSTRAINT fk_schedule_times_sched FOREIGN KEY (schedule_days_id) REFERENCES schedule_days(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO admin (username, password) VALUES ('admin', 'YWRtaW4=');
