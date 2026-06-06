@@ -204,7 +204,7 @@ function search(){
 
 					document.getElementById("update").addEventListener("click",function(){
 						
-						update(this,response.aviso.nombre,response.aviso.apellido,response.aviso.genero,response.aviso.identificacion,response.aviso.peso,response.aviso.estatura,response.aviso.natalicio,response.aviso.rol,response.aviso.centro,response.aviso.ficha,response.aviso.correo,response.aviso.vencimiento,response.aviso.dia,response.aviso.hora);
+						update(this,response.aviso.nombre,response.aviso.apellido,response.aviso.genero,response.aviso.identificacion,response.aviso.peso,response.aviso.estatura,response.aviso.natalicio,response.aviso.rol,response.aviso.centro,response.aviso.ficha,response.aviso.correo,response.aviso.vencimiento,response.aviso.dia,response.aviso.hora,response.aviso.schedule_time_id);
 					
 					},false);
 					

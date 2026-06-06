@@ -23,7 +23,10 @@ function loadSchedules(){
         },
         success: function(response){
             if(response.validar == 1 && response.aviso.length > 0){
-                var html = "<table class='schedule-table'><tr><th>ID</th><th>Rol</th><th>Días</th><th>Rango Horario</th><th>Estado</th><th>Editar</th><th>Activar/Desactivar</th></tr>";
+                var activeHtml = "";
+                var inactiveHtml = "";
+                var activeCount = 0;
+                var inactiveCount = 0;
                 $.each(response.aviso, function(i, s){
                     var roleName = s.role == 1 ? "Aprendiz" : (s.role == 2 ? "Funcionario" : "Rol " + s.role);
                     var dayNames = {0:"Dom",1:"Lun",2:"Mar",3:"Mié",4:"Jue",5:"Vie",6:"Sáb"};
@@ -38,8 +41,21 @@ function loadSchedules(){
                     });
                     var estadoLabel = s.estado == 1 ? "Activo" : "Inactivo";
                     var toggleLabel = s.estado == 1 ? "Desactivar" : "Activar";
-                    html += "<tr><td>" + s.id + "</td><td>" + roleName + "</td><td>" + daysStr + "</td><td>" + rangesStr + "</td><td>" + estadoLabel + "</td><td><span class='btn' onclick='editSchedule(" + s.id + ")'>Editar</span></td><td><span class='btn' onclick='toggleSchedule(" + s.id + ")'>" + toggleLabel + "</span></td></tr>";
+                    var row = "<tr><td>" + s.id + "</td><td>" + roleName + "</td><td>" + daysStr + "</td><td>" + rangesStr + "</td><td>" + estadoLabel + "</td><td><span class='btn' onclick='editSchedule(" + s.id + ")'>Editar</span></td><td><span class='btn' onclick='toggleSchedule(" + s.id + ")'>" + toggleLabel + "</span></td></tr>";
+                    if(s.estado == 1){
+                        activeHtml += row;
+                        activeCount++;
+                    }else{
+                        inactiveHtml += row;
+                        inactiveCount++;
+                    }
                 });
+                var html = "<table class='schedule-table'><tr><th>ID</th><th>Rol</th><th>Días</th><th>Rango Horario</th><th>Estado</th><th>Editar</th><th>Activar/Desactivar</th></tr>";
+                html += activeHtml;
+                if(inactiveCount > 0){
+                    html += "<tr id='show-inactive-row'><td colspan='7' style='text-align:center;padding:8px;cursor:pointer;background-color:#f0f0f0;font-size:13px' onclick='toggleInactive()'>Ver inactivos (" + inactiveCount + ")</td></tr>";
+                    html += "<tbody id='inactive-schedules' style='display:none'>" + inactiveHtml + "</tbody>";
+                }
                 html += "</table>";
                 $("#schedule-list").html(html);
             }else{
@@ -47,6 +63,19 @@ function loadSchedules(){
             }
         }
     });
+}
+
+function toggleInactive(){
+    var tbody = document.getElementById("inactive-schedules");
+    var row = document.getElementById("show-inactive-row");
+    if(tbody.style.display == "none"){
+        tbody.style.display = "";
+        row.innerHTML = "<td colspan='7' style='text-align:center;padding:8px;cursor:pointer;background-color:#f0f0f0;font-size:13px' onclick='toggleInactive()'>Ocultar inactivos</td>";
+    }else{
+        tbody.style.display = "none";
+        var count = tbody.getElementsByTagName("tr").length;
+        row.innerHTML = "<td colspan='7' style='text-align:center;padding:8px;cursor:pointer;background-color:#f0f0f0;font-size:13px' onclick='toggleInactive()'>Ver inactivos (" + count + ")</td>";
+    }
 }
 
 function addTimeSlotRow(start, end){

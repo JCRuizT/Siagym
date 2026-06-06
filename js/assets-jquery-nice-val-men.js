@@ -465,11 +465,7 @@ function see(element,nombre,apellido,genero,identificacion,peso,estatura,natalic
 	
 	}
 }
-
-
-
-
-function update(element,nombre,apellido,genero,identificacion,peso,estatura,natalicio,rol,centro,ficha,correo,fecha_vencimiento,dia,hora){
+function update(element,nombre,apellido,genero,identificacion,peso,estatura,natalicio,rol,centro,ficha,correo,fecha_vencimiento,dia,hora,schedule_time_id){
 	
 	btnCommon();
 	
@@ -672,48 +668,95 @@ function update(element,nombre,apellido,genero,identificacion,peso,estatura,nata
 	PesoAndEstatura();
 
 
-	
-	
 	if(rol == 1){
-		
-		
 		$("#ficha-content").html('<label for="ficha"class="">ficha</label><input type="number" name="ficha" id="ficha" class="right"/>');
-						
-		$("#dia").html("<option value='0'>Seleccionar</option><option value='1'>Lunes,Miercoles,Viernes</option><option value='2'>Martes,Jueves.Sabado</option>");
-		
-		
-		$("#dia").click(function(){
-			
-			if($("#dia").val()==1){
-			$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>7:00 Am a 1:20 Pm</option><option value='2'>2:00 Pm a 8:00 Pm</option>");
-			}else if($("#dia").val()==2){
-				
-				
-				$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>7:00 Am a 1:20 Pm</option>");
-
-			}
-			
-		});
-	
-	
 	}else if(rol == 2){
-		
-			
 		$("#ficha-content").html('<input value="'+identificacion+'" type="hidden" name="ficha" id="ficha-hidden"/>');
-		$("#dia").html("<option value='0'>Seleccionar</option><option value='1'>Martes,Jueves</option>");
-		
-		$("#dia").click(function(){
-			
-			
-			$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>2:00 Pm a 8:00 Pm</option>");
-			
-			
+	}
+
+	if(document.getElementById("dia")){
+		var dayNames = {0:"Dom",1:"Lun",2:"Mar",3:"Mié",4:"Jue",5:"Vie",6:"Sáb"};
+		var $dia = $("#dia");
+		var $hora = $("#hora");
+
+		$dia.html("<option value='0'>Cargando...</option>");
+		$.ajax({
+			data: { "send-get-schedules-by-role": "1", "role": rol },
+			async: true,
+			url: "asset/sendCrud.php",
+			type: 'post',
+			dataType: "json",
+			success: function(response){
+				if(response.validar == 1 && response.aviso.length > 0){
+					var opts = "<option value='0'>Seleccionar</option>";
+					$.each(response.aviso, function(i, s){
+						var daysStr = "";
+						$.each(s.days, function(j, d){
+							daysStr += dayNames[d] + " ";
+						});
+						var timesStr = "";
+						$.each(s.times, function(j, t){
+							if(j > 0) timesStr += ", ";
+							timesStr += t.start_time.substring(0,5) + "-" + t.end_time.substring(0,5);
+						});
+						opts += "<option value='" + s.id + "'>#" + s.id + " " + daysStr + "- " + timesStr + "</option>";
+					});
+					$dia.html(opts);
+				}else{
+					$dia.html("<option value='0'>Sin horarios disponibles</option>");
+				}
+
+				if(schedule_time_id && schedule_time_id != ""){
+					var foundSchedule = null;
+					$.each(response.aviso, function(i, s){
+						$.each(s.times, function(j, t){
+							if(t.id == schedule_time_id){
+								foundSchedule = s;
+							}
+						});
+					});
+					if(foundSchedule){
+						$dia.val(foundSchedule.id).change();
+					}
+				}
+			}
+		});
+
+		$dia.off("change").on("change", function(){
+			var scheduleId = $(this).val();
+			if(scheduleId == 0){
+				$hora.html("<option value='0'>Seleccionar</option>");
+				return;
+			}
+			$.ajax({
+				data: { "send-get-schedules-by-role": "1", "role": rol },
+				async: true,
+				url: "asset/sendCrud.php",
+				type: 'post',
+				dataType: "json",
+				success: function(response){
+					if(response.validar == 1 && response.aviso.length > 0){
+						var schedule = null;
+						$.each(response.aviso, function(i, s){
+							if(s.id == scheduleId) schedule = s;
+						});
+						if(schedule && schedule.times.length > 0){
+							var opts = "<option value='0'>Seleccionar</option>";
+							$.each(schedule.times, function(j, t){
+								opts += "<option value='" + t.id + "'>#" + t.id + " " + t.start_time.substring(0,5) + "-" + t.end_time.substring(0,5) + "</option>";
+							});
+							$hora.html(opts);
+						}else{
+							$hora.html("<option value='0'>Sin horarios</option>");
+						}
+					}
+					if(schedule_time_id && schedule_time_id != ""){
+						$hora.val(schedule_time_id);
+					}
+				}
+			});
 		});
 	}
-	
-	
-
-	
 	
 
 	datosUptateInput("nombre",nombre);
@@ -743,47 +786,6 @@ function update(element,nombre,apellido,genero,identificacion,peso,estatura,nata
 	datosUptateSelect("fecha_ven_carnet1",vencimiento[1]);
 	
 	datosUptateSelect("fecha_ven_carnet2",vencimiento[0]);
-	
-	datosUptateSelect("dia",dia);
-	
-
-	setTimeout(function(){
-	if(rol==1){
-		
-	if(document.getElementById("dia").value == 1){
-	
-		$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>7:00 Am a 1:20 Pm</option><option value='2'>2:00 Pm a 8:00 Pm</option>");
-		
-	}else if(document.getElementById("dia").value == 2){
-		
-		$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>7:00 Am a 1:20 Pm</option>");
-
-
-	}
-	
-	
-	}else{
-		
-
-		
-		$("#hora").html("<option value='0'>Seleccionar</option><option value='1'>2:00 Pm a 8:00 Pm</option>");
-
-	
-		
-	}
-	},100);
-	
-
-	
-	
-
-	setTimeout(function(){
-
-	
-	datosUptateSelect("hora",hora);
-	
-	},100);
-
 
 	datosUptateSelect("peso",peso);
 
@@ -896,7 +898,11 @@ links[i].addEventListener("click",function(e) {
 	}else{
 		
 		
-		$("#container-siagym").load(this.getAttribute("data-link-vinculo"));
+		$("#container-siagym").load(this.getAttribute("data-link-vinculo"), function(){
+			if(getQueryVariable("statistics") != false){
+				if(typeof listar === "function") listar();
+			}
+		});
 		window.history.pushState(null, "", this.getAttribute("href"));
 		changeItem();		
 		
